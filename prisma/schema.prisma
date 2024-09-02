@@ -13,4 +13,27 @@ model Client {
   lastname String?
   name String
   dni Int @unique
+  tools ToolsOnClients[]
+}
+
+model Brand {
+  id String @id @default(uuid())
+  name String @unique
+  tools Tool[]
+}
+
+model Tool {
+  id String @id @default(uuid())
+  model String @unique
+  brandId String
+  brand Brand @relation(fields: [brandId], references: [id])
+  clients ToolsOnClients[]
+}
+
+model ToolsOnClients {
+  toolID String
+  tool Tool @relation(fields: [toolID], references: [id])
+  clientId String
+  client Client @relation(fields: [clientId], references: [id])
+  @@id([toolID, clientId])
 }
