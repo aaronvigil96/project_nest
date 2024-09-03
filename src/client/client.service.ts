@@ -14,10 +14,19 @@ export class ClientService {
 
     async allClients(paginationDto:PaginationDto):Promise<Client[]>{
         const {limit = 10, offset = 0} = paginationDto;
-        return this.prisma.client.findMany({
+        const clients = await this.prisma.client.findMany({
             skip: offset,
-            take: limit
+            take: limit,
+            include: {
+                tools: {
+                    include: {
+                        tool: true
+                    }
+                }
+            }
         });
+        
+        return clients;
     }
 
     async getClientById(id: string): Promise<Client>{
